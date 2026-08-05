@@ -1,102 +1,65 @@
 # Cohort-SubhankarDasMohanty-25E113C38
 
-A small frontend project built with JavaScript, CSS and HTML created for the cohort assignment.
-
-## Table of Contents
-
-- [Demo](#demo)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Install](#install)
-  - [Run](#run)
-- [Build](#build)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
-## Demo
-
-Open index.html in your browser or run the project locally (instructions below).
+A small two-part web application (React frontend + Node.js/Express backend) used for a cohort assignment. The app provides a registration UI and a simple PostgreSQL-backed API for storing registrations.
 
 ## Features
+- React-based registration form (frontend/src/components/RegisterForm.jsx)
+- Express API (backend/server.js)
+- PostgreSQL connection helper and DB init script (backend/models/connection.js, backend/controllers/initDb.js)
+- Simple static assets and styles (frontend/index.html, frontend/src/*.css)
 
-- Interactive UI implemented with vanilla JavaScript
-- Responsive layout with CSS
-- Static HTML entry point
+## Tech stack
+- Languages: JavaScript, CSS, HTML
+- Backend: Node.js + Express
+- Database: PostgreSQL (via node-postgres/pg)
+- Frontend: React + Vite
 
-## Tech Stack
+## Quick start
 
-- JavaScript
-- CSS
-- HTML
-
-## Project Structure
-
-Typical structure (adjust if your repo differs):
-
-- index.html — entry point
-- css/ — stylesheets
-- js/ — JavaScript source files
-- assets/ — images or other static files
-
-## Getting Started
-
-### Prerequisites
-
-- A modern web browser (Chrome, Firefox, Edge, or Safari)
-- Optional: Node.js + npm if you want to run a simple static server
-
-### Install
-
-If you just want to open the project locally:
+Prerequisites
+- Node.js (16+ recommended)
+- npm
+- PostgreSQL (if you want persistence)
 
 1. Clone the repo
    git clone https://github.com/subhankardasmohanty/Cohort-SubhankarDasMohanty-25E113C38.git
-2. Open `index.html` in your browser
+   cd Cohort-SubhankarDasMohanty-25E113C38
 
-If you prefer a local static server (recommended):
+2. Start the backend
+   cd backend
+   npm install
+   # create a backend/.env with the DB connection and any env vars referenced by server.js
+   npm start
 
-1. Install a static server (for example, http-server):
-   npm install -g http-server
-2. Serve the project folder:
-   http-server .
-3. Open http://localhost:8080
+3. Start the frontend (development)
+   cd ../frontend
+   npm install
+   npm run dev
+   # or open frontend/index.html directly for a static demo
 
-### Run (development)
+## Environment variables (example)
+Create `backend/.env` with at least the database connection. Example keys used commonly:
 
-There are no build tools configured by default. Use a static server or a simple dev server like `http-server` or the Live Server extension in VS Code.
+```
+DATABASE_URL=postgres://user:password@localhost:5432/dbname
+PORT=8080
+```
+(Adjust names to match what `server.js` expects.)
 
-## Build
+## Project structure
+- backend/ — Express server, DB helpers, package.json and start script
+- frontend/ — React + Vite app, components, static HTML & CSS
 
-No build step is required for this static project. If you add bundling, include build steps here.
-
-## Testing
-
-No automated tests are configured. To add tests, consider a framework like Jest for JavaScript logic.
+## Development notes
+- backend/package.json includes `start: node server.js`. Add a dev script using nodemon if you want auto-restart during development.
+- controllers/initDb.js appears to contain DB initialization logic; run it once (or the server may run it on startup if implemented) to create tables.
 
 ## Contributing
-
-Contributions are welcome. Suggested flow:
-
-1. Fork the repository
-2. Create a branch for your change: `git checkout -b feat/your-feature`
-3. Make changes and commit: `git commit -m "feat: add ..."`
-4. Push and open a pull request
-
-Coding style: use descriptive commit messages and keep changes small and focused.
+- Fork the repo, create a branch, make changes, push, and open a PR.
+- Keep commits small and descriptive.
 
 ## License
-
-This project does not currently include a license file. Consider adding an OSI-approved license such as MIT.
+This project currently has no license file in the repository — add a LICENSE if you want to specify reuse/redistribution terms.
 
 ## Contact
-
-Created by Subhankar Das Mohanty — https://github.com/subhankardasmohanty
-
----
-
-*README generated and added by GitHub Copilot.*
+Created by Subhankar Das Mohanty — see the repository for details.
