@@ -9,31 +9,27 @@ function RegisterForm() {
   const [age, setAge] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const response = await axios.post(
-      "http://localhost:3001/user",
-      {
+    try {
+      const response = await axios.post("http://localhost:3001/user", {
         name,
         registration_no: registrationNo,
         email,
         password,
         age,
-      }
-    );
+      });
 
-    console.log(response.data);
-    alert("User Registered Successfully!");
-
-  } catch (error) {
-    console.log(error.response?.data || error.message);
-    alert("Registration Failed!");
-  }
-};
+      console.log(response.data);
+      alert("User Registered Successfully!");
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+      alert("Registration Failed!");
+    }
+  };
 
   return (
-    <div>
+    <div className="container">
       <h1>User Registration</h1>
 
       <form onSubmit={handleSubmit}>

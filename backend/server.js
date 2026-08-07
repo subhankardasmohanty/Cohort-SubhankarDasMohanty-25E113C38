@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-const { initDatabase } = require("./controllers/initDb.js");
+const { initDatabase } = require("./db/initdb.js");
 const dp = require("./models/connection.js");
 const cors = require("cors");
 
