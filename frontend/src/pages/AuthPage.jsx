@@ -6,10 +6,19 @@ function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="auth-container">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "50px",
+      }}
+    >
       <h1>TaskSync</h1>
 
       {isLogin ? <LoginForm /> : <RegisterForm />}
+
+      <br />
 
       <button onClick={() => setIsLogin(!isLogin)}>
         {isLogin
