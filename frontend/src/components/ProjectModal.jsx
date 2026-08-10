@@ -1,9 +1,18 @@
 import { useState } from "react";
 import client from "../api/client";
 
-function ProjectModal({ onClose, onProjectCreated }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+function ProjectModal({
+  project,
+  onClose,
+  onProjectCreated,
+  onProjectUpdated,
+}) {
+  const isEditing = !!project;
+
+  const [name, setName] = useState(project?.name || "");
+  const [description, setDescription] = useState(
+    project?.description || ""
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -19,18 +28,30 @@ function ProjectModal({ onClose, onProjectCreated }) {
       setLoading(true);
       setError("");
 
-      const response = await client.post("/projects", {
-        name,
-        description,
-      });
+      if (isEditing) {
+        const response = await client.patch(
+          `/projects/${project.id}`,
+          {
+            name: name.trim(),
+            description: description.trim(),
+          }
+        );
 
-      const newProject =
-        response.data.project || response.data.data;
+        const updatedProject =
+          response.data.project || response.data.data;
 
-      onProjectCreated(newProject);
+        onProjectUpdated(updatedProject);
+      } else {
+        const response = await client.post("/projects", {
+          name: name.trim(),
+          description: description.trim(),
+        });
 
-      setName("");
-      setDescription("");
+        const newProject =
+          response.data.project || response.data.data;
+
+        onProjectCreated(newProject);
+      }
 
       onClose();
     } catch (error) {
@@ -38,7 +59,7 @@ function ProjectModal({ onClose, onProjectCreated }) {
 
       setError(
         error.response?.data?.message ||
-          "Failed to create project."
+          `Failed to ${isEditing ? "update" : "create"} project.`
       );
     } finally {
       setLoading(false);
@@ -49,14 +70,12 @@ function ProjectModal({ onClose, onProjectCreated }) {
     <div
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        inset: 0,
         background: "rgba(0, 0, 0, 0.5)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        zIndex: 1000,
       }}
     >
       <div
@@ -67,7 +86,7 @@ function ProjectModal({ onClose, onProjectCreated }) {
           width: "400px",
         }}
       >
-        <h2>Create Project</h2>
+        <h2>{isEditing ? "Edit Project" : "Create Project"}</h2>
 
         <form onSubmit={handleSubmit}>
           <input
@@ -75,11 +94,12 @@ function ProjectModal({ onClose, onProjectCreated }) {
             placeholder="Project name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            required
+            disabled={loading}
             style={{
               width: "100%",
               padding: "10px",
               marginBottom: "15px",
+              boxSizing: "border-box",
             }}
           />
 
@@ -87,11 +107,13 @@ function ProjectModal({ onClose, onProjectCreated }) {
             placeholder="Project description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            disabled={loading}
             rows="4"
             style={{
               width: "100%",
               padding: "10px",
               marginBottom: "15px",
+              boxSizing: "border-box",
             }}
           />
 
@@ -104,21 +126,21 @@ function ProjectModal({ onClose, onProjectCreated }) {
           <button
             type="submit"
             disabled={loading}
-            style={{
-              marginRight: "10px",
-              padding: "10px 15px",
-            }}
           >
-            {loading ? "Creating..." : "Create Project"}
+            {loading
+              ? isEditing
+                ? "Saving..."
+                : "Creating..."
+              : isEditing
+                ? "Save Changes"
+                : "Create Project"}
           </button>
 
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            style={{
-              padding: "10px 15px",
-            }}
+            style={{ marginLeft: "10px" }}
           >
             Cancel
           </button>
