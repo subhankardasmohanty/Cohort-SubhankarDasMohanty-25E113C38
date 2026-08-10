@@ -1,53 +1,49 @@
 import { useState } from "react";
-import axios from "axios";
+import client from "../api/client";
 
 function RegisterForm() {
-  const [name, setName] = useState("");
-  const [registrationNo, setRegistrationNo] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [age, setAge] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:3001/user", {
-        name,
-        registration_no: registrationNo,
+      const response = await client.post("/auth/register", {
+        username,
         email,
         password,
-        age,
       });
 
+      alert(response.data.message);
+
+      setUsername("");
+      setEmail("");
+      setPassword("");
+
       console.log(response.data);
-      alert("User Registered Successfully!");
     } catch (error) {
-      console.log(error.response?.data || error.message);
-      alert("Registration Failed!");
+      console.error(error.response?.data || error.message);
+
+      alert(
+        error.response?.data?.message || "Registration failed."
+      );
     }
   };
 
   return (
     <div className="container">
-      <h1>User Registration</h1>
+      <h1>Create Account</h1>
 
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Enter your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <br />
-        <br />
 
         <input
           type="text"
-          placeholder="Enter Registration Number"
-          value={registrationNo}
-          onChange={(e) => setRegistrationNo(e.target.value)}
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
         />
 
         <br />
@@ -55,9 +51,10 @@ function RegisterForm() {
 
         <input
           type="email"
-          placeholder="Enter your email"
+          placeholder="Enter Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <br />
@@ -65,25 +62,19 @@ function RegisterForm() {
 
         <input
           type="password"
-          placeholder="Enter your password"
+          placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
 
         <br />
         <br />
 
-        <input
-          type="number"
-          placeholder="Enter your age"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
+        <button type="submit">
+          Register
+        </button>
 
-        <br />
-        <br />
-
-        <button type="submit">Register</button>
       </form>
     </div>
   );

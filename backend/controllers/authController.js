@@ -128,7 +128,53 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const result = await query(
+      `
+      SELECT id, username, email, created_at
+      FROM users
+      WHERE id = $1;
+      `,
+      [req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: result.rows[0],
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error: error.message,
+    });
+  }
+};
+
+const logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Logout successful.",
+  });
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getCurrentUser,
+  logoutUser,
 };
