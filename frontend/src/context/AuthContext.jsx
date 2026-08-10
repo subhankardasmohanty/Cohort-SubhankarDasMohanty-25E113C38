@@ -1,9 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import client from "../api/client";
 
@@ -36,7 +31,13 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    setUser(null);
+    try {
+      await client.post("/auth/logout");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
