@@ -19,10 +19,7 @@ function KanbanBoard({ projectId }) {
       } catch (error) {
         console.error(error);
 
-        setError(
-          error.response?.data?.message ||
-            "Failed to load tasks."
-        );
+        setError(error.response?.data?.message || "Failed to load tasks.");
       } finally {
         setLoading(false);
       }
@@ -68,47 +65,36 @@ function KanbanBoard({ projectId }) {
     // Optimistically update the UI
     setTasks((currentTasks) =>
       currentTasks.map((task) =>
-        task.id === taskId
-          ? { ...task, status: newStatus }
-          : task
-      )
+        task.id === taskId ? { ...task, status: newStatus } : task,
+      ),
     );
 
     try {
-      const response = await client.patch(
-        `/tasks/${taskId}/status`,
-        {
-          status: newStatus,
-        }
-      );
+      const response = await client.patch(`/tasks/${taskId}/status`, {
+        status: newStatus,
+      });
 
-      const updatedTask =
-        response.data.task || response.data.data;
+      const updatedTask = response.data.task || response.data.data;
 
       if (updatedTask) {
         setTasks((currentTasks) =>
           currentTasks.map((task) =>
-            task.id === updatedTask.id
-              ? updatedTask
-              : task
-          )
+            task.id === updatedTask.id ? updatedTask : task,
+          ),
         );
       }
     } catch (error) {
       console.error(error);
 
       setError(
-        error.response?.data?.message ||
-          "Failed to update task status."
+        error.response?.data?.message || "Failed to update task status.",
       );
 
       // Revert the optimistic update
       setTasks((currentTasks) =>
         currentTasks.map((task) =>
-          task.id === taskId
-            ? { ...task, status: source.droppableId }
-            : task
-        )
+          task.id === taskId ? { ...task, status: source.droppableId } : task,
+        ),
       );
     }
   };
@@ -133,15 +119,10 @@ function KanbanBoard({ projectId }) {
         }}
       >
         {columns.map((column) => {
-          const columnTasks = tasks.filter(
-            (task) => task.status === column.id
-          );
+          const columnTasks = tasks.filter((task) => task.status === column.id);
 
           return (
-            <Droppable
-              key={column.id}
-              droppableId={column.id}
-            >
+            <Droppable key={column.id} droppableId={column.id}>
               {(provided) => (
                 <div
                   ref={provided.innerRef}
@@ -150,15 +131,14 @@ function KanbanBoard({ projectId }) {
                     flex: 1,
                     minHeight: "500px",
                     padding: "20px",
-                    background: "#f5f5f5",
+                    background: "#111827",
+                    border: "1px solid #263244",
                     borderRadius: "8px",
                   }}
                 >
                   <h2>{column.title}</h2>
 
-                  {columnTasks.length === 0 && (
-                    <p>No tasks yet.</p>
-                  )}
+                  {columnTasks.length === 0 && <p>No tasks yet.</p>}
 
                   {columnTasks.map((task, index) => (
                     <Draggable
@@ -177,20 +157,18 @@ function KanbanBoard({ projectId }) {
                             onTaskUpdated={(updatedTask) => {
                               setTasks((currentTasks) =>
                                 currentTasks.map((currentTask) =>
-                                  currentTask.id ===
-                                  updatedTask.id
+                                  currentTask.id === updatedTask.id
                                     ? updatedTask
-                                    : currentTask
-                                )
+                                    : currentTask,
+                                ),
                               );
                             }}
                             onTaskDeleted={(deletedTaskId) => {
                               setTasks((currentTasks) =>
                                 currentTasks.filter(
                                   (currentTask) =>
-                                    currentTask.id !==
-                                    deletedTaskId
-                                )
+                                    currentTask.id !== deletedTaskId,
+                                ),
                               );
                             }}
                           />

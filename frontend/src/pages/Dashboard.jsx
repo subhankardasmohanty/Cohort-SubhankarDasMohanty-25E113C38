@@ -10,6 +10,7 @@ function Dashboard() {
         style={{
           display: "flex",
           height: "calc(100vh - 70px)",
+          background: "#0b1120",
         }}
       >
         <ProjectList />

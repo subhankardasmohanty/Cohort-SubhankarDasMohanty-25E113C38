@@ -17,8 +17,9 @@ function Navbar() {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "15px 30px",
-        background: "#1976d2",
-        color: "white",
+        background: "#111827",
+        color: "#f8fafc",
+        borderBottom: "1px solid #263244",
       }}
     >
       <h2>TaskSync</h2>
@@ -28,9 +29,7 @@ function Navbar() {
           Welcome {user?.username || "User"}
         </span>
 
-        <button onClick={handleLogout}>
-          Logout
-        </button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
     </nav>
   );
